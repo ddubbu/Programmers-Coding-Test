@@ -1,0 +1,66 @@
+function solution(genres, plays) {
+    /*
+    input : array 2개, 고유번호 i인 노래의 genres & plays
+    output
+    > 각 장르별 total 재생 큰수 부터
+    > 장르 내 많이 재생된 노래 top 2
+    > 예외 :  (같은 경우 고유 번호 낮은 아이 부터), 장르 내 1곡만 있으면 1곡만
+    > return [best 노래들]
+    
+    solution
+    > obj 형태로, 해쉬 구조
+    key => 장르 ,value => total 재생횟수, 노래 (고유 번호, 재생횟수)
+    > genres & plays 동시 탐색하면서 playCount 정리하기
+    let playCount = { genre1 : { totalCount : Number, songs : [ 2D array, [고유 번호, 재생횟수] ]}}
+    > totalCount 동시에 sum
+    > 마지막에 songs sort(재생횟수 기준)
+    */
+    
+    let playCount = { };
+    for(let idx=0; idx<genres.length; idx ++){
+        let keys = Object.keys(playCount);
+        if(! keys.includes(genres[idx])){
+            playCount[genres[idx]] = {totalCount : 0, songs : []};
+        }
+        playCount[genres[idx]]['totalCount'] +=  plays[idx];
+        playCount[genres[idx]]['songs'].push([idx,plays[idx]]);
+    }
+
+    let bestAlbum = [];
+    let genreKinds = Object.keys(playCount);
+    //console.log('playCount is  ',playCount);
+
+    
+    // 내림차순으로 sort()   ====>  Q. Math.max를 obj에 확장하는 방법은?
+    // 1. genre별 play 횟수 
+    //console.log('정렬전 genreKinds is ', genreKinds);
+    genreKinds.sort((a,b)=> playCount[b]['totalCount'] - playCount[a]['totalCount']);
+    //console.log('정렬후 genreKinds is ', genreKinds);
+    
+    // 2. 장르 내 songs play 횟수 정리하고 바로 bestAlbum push
+    genreKinds.forEach((genre)=>{
+                    //console.log('정렬전 playCount[genre][\'songs\'] ', playCount[genre]['songs'])
+        playCount[genre]['songs'].sort((a,b) => {
+            //console.log('a[1] is ', a[1], ' b[1] is ', b[1])
+            if(b[1]===a[1]){// song play 횟수 같으면 idx 비교
+                return a[0]-b[0];
+            }
+            else{ // song play 횟수 다르면 play수 비교
+                return b[1]-a[1]; 
+            }
+            }) // 노래별 재생횟수 내림차순 sort
+            //console.log('정렬후 playCount[genre][\'songs\'] ',playCount[genre]['songs'])
+        
+        bestAlbum.push(playCount[genre]['songs'][0][0]);
+        if(playCount[genre]['songs'].length>1){ //2개 이상이면
+            bestAlbum.push(playCount[genre]['songs'][1][0]);
+        }
+    })
+    
+    return bestAlbum;
+    
+    
+
+    
+    
+}

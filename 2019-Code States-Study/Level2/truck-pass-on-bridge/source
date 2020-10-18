@@ -1,0 +1,63 @@
+function solution(bridge_length, bridge_weight, truck_weights) {
+    /*
+    어려움 : ★★★★☆ (flow chart 안그리니깐.. 1문제를 약 5시간동안..!)
+    input : num,num, array
+    output : 모든 트럭이 통과한 '최소' 시간
+
+    solution
+    > 경과시간을 while(대기트럭 유 && onBridge 유 ) time ++ 로 세기
+        << time 지남과 동시에 모든 트럭 position ++
+        <★< 빠른 루트로 onBridge.sum > bridge_weight 이면 바로 다리 끝으로 time ++ & shift()
+    > 다리 빠져나갈 트럭 보기
+        << onBridge[0] truck 의 '위치' === bridge_length -> shift()
+    > 새로운 트럭을 넣을지 check
+        << onBridge에 트럭 올릴때 { 'weight' : number , 'position' : number } 다리 위 '위치'도 함께
+    >
+
+    주의사항
+    > 다리 길이 1당 시간 1초 count
+    > 1초에 모든트럭은 길이 1씩 이동
+    > 완전히 오른 트럭의 무게만 고려함 (근데 트럭은 종잇장처럼 얇다고 생각)
+    > 지우고 추가하고 순서가 겁나 중요하다! > 제발, chartFlow 먼저 그리삼
+    */
+    
+    let onBridge =[];
+    //let passTrucks =[]; //나중에 따로 담아두려면
+    let time = 0;
+    let sumOnBridge = 0;
+    let newTruck ;
+    while(!(onBridge.length===0 && truck_weights.length===0)){
+        
+        //console.log("반복문 처음 onBridge is ", onBridge);
+        newTruck = truck_weights[0];
+        if(newTruck !== undefined && sumOnBridge + newTruck <= bridge_weight){
+            let temp =truck_weights.shift();
+            onBridge.push({'weight' : temp , 'position':0})
+            sumOnBridge += temp // 무게 갱신
+            //console.log("새로운 요소 ", temp, "더한 후에 sumOnBirdege is ", sumOnBridge)
+        }
+        onBridge.forEach((ele)=> {ele.position ++}); time++;
+        //console.log("한칸씩 앞으로 이동한 다리 위 ",onBridge);
+        
+        // 다리 빠져나갈 트럭 check
+        if(onBridge.length !==0 && onBridge[0]['position']===bridge_length){
+            // 좀 더 빠른 solution
+            // onBridge에 더이상 new 트럭을 못 넣는 경우이면
+            newTruck = truck_weights[0] || 0; //undefined 인 경우 0으로 넣기
+            if(sumOnBridge + newTruck > bridge_weight){ // onBridge에 더이상 new 트럭을 못 넣는 경우이면
+                while(onBridge[0].position !== bridge_length){ //첫 요소가 bridge 끝에 도착할 때까지
+                    onBridge.forEach((ele)=> {ele.position ++}); time++;
+                }
+            }
+                //console.log("마지막요소 빠져나감 ", onBridge[0]);
+                let outTruck = onBridge.shift()// -> passTrucks.push()
+                sumOnBridge -= outTruck.weight // 무게 갱신
+                //console.log("종점 도착 트럭 뺀 후에 sumOnBirdge is ", sumOnBridge)
+                //console.log("time is ", time);
+        }
+    
+        //console.log("--------------");  
+    }
+        
+    return time+1; // 마지막 트럭이 다리 벗어나는 마지막 time 추가!
+}

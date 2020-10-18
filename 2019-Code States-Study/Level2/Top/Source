@@ -1,0 +1,12 @@
+function solution(heights) {
+    // 그냥 for() 쓰면 안됨?
+    // LIFO, FIFO, push, pop은 ... 언제 쓰노
+    return heights.map((ele, idx)=>{
+        for(let i=idx-1; i>=0;i--){
+            if(ele<heights[i]){
+                return i+1 // (i+1)번째 아이가 가로막는 중
+            }
+        }
+        return 0; // 여기까지 왔으면
+    })
+}

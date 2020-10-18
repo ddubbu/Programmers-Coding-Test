@@ -1,0 +1,44 @@
+function solution(clothes) {
+    /*
+    input : 2D array, with [의상 이름, 의상 종류], 중복 X
+    ouput : 의상 조합 (한개의 종류만 입을 수 있다.)
+    solution : clothes array element -> obj에서의 [key, value] 형태로 생각
+    -> key는 array로 받기
+    */
+    
+    /* 
+    > 해시 자료구조 설명
+    해시? key - value 매핑 과정 (여기서는 충돌, 중복 고려 X)
+    장점 : 데이터 효율적 관리(삽입, 삭제, 탐색 용이 only 'value' 이용)=> O(1)
+    단점 : 해시 충돌(동일 value 소지) >> chainning 기법 사용 >> 연결 리스트로 추가
+    
+    > Cloth 정리하기, obj = { kind : { num : 개수, cloth : [array] }} 순으로
+    (key = kind) - hashfunction -> (value = { num : 개수, cloth : [array] })
+    key로 존재여부 살피고 삽입 및 수정
+    */
+    let clothList = {};
+    
+    for(let ele of clothes){
+        let clothName = ele[0]; let kind = ele[1];
+        console.log(clothName, ', ',kind)
+        let keys = Object.keys(clothList);
+        console.log('before >> ', clothList)
+        if(! keys.includes(kind)){ // 해시 구조 활용. key 값, kind로 유무 파악 후 삽입 및 수정
+            clothList[kind]={cloth : [], num:0};
+        }
+        clothList[kind]['cloth'].push(clothName);
+        clothList[kind]['num'] += 1;
+        console.log('afer >> ', clothList)
+        
+    }
+    
+    // 조합 찾기
+    // [3,2,1] 일때 -> 4*3*2 -1(모두 착용 x 경우) 개의 조합
+    // (o,o,o,x) * (o,o,x) * (o,x) -1
+    let count = 1 ;
+    for(let key in clothList){
+        count *= ( 1 + clothList[key]['num'] );
+    }
+    return count-1;
+
+}

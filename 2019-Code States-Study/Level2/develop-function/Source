@@ -1,0 +1,55 @@
+function solution(progresses, speeds) {
+    /*
+    input : arrays, progresses(진도) & speeds
+    output : (날짜 상관없이) 하루에 Num of (release function)
+    
+    problem
+    > 진도 100% 여도, 선행 기능이 완료되어야 같이 배포됨
+    */
+    let releaseArr = [];
+    let check =0;
+    let releaseCount;
+    let dayCount = 0;
+    while(progresses.length !==0){
+        dayCount++;
+        releaseCount = 0;
+        //if(check>100){console.log(check);break};
+        progresses.forEach((ele,idx,arr)=>{
+            //console.log("before ele is ", ele);
+            if(arr[idx]<100){
+                arr[idx] += speeds[idx]; //ele 가 아니라 직접 array에 넣어주어야지!
+            }
+            //console.log("after ele is ", arr[idx]); //forEach에서 arr is immutable
+        })
+        //console.log("upgrade 후에 ")
+        //console.log("progresses is ",progresses);
+        //console.log("-------------")
+        check = check100(progresses, speeds);
+        if(check>0){
+           releaseArr.push(check);
+        }
+
+    }
+    
+    function check100(p_arr, s_arr){
+        if(p_arr[0]>=100){
+            //console.log("첫번째 아이가 100 이상이면 빼내고 Count ++")
+            p_arr.shift();
+            s_arr.shift();
+            releaseCount++;
+            if(p_arr.length!==0){
+                //console.log("그리고 그다음 ele 확인하러 재귀 call back")
+                return check100(p_arr,s_arr);
+            }
+            else{
+                //console.log("마지막 요소라서 따로 return releaseCount is ", releaseCount);
+                return releaseCount; // 마지막 요소라면
+            }
+        }
+        else{
+            //console.log("return releaseCount is ", releaseCount);
+            return releaseCount;
+        }
+    }
+    return releaseArr;
+}
