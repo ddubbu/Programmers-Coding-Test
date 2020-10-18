@@ -1,0 +1,32 @@
+# include <stdio.h>
+# include <stdlib.h>
+int main(void)
+{
+	//printf("hello World\n");
+
+	int age = 12;
+	char blood ='A'; // 문자 (한글자)
+	char name[] = "KWS"; // 문자열
+	/*
+	char name[256];
+	name = "KWS"; // 왜 이렇게는 에러 뜨지?
+	*/
+	float height = 159.7777;
+	printf("나이는 %d, 이름은 %s, 혈액형은 %c, 키는 %.1f\n",age, name, blood, height);
+	
+	int one, two, three;
+
+	// 받을 때는 주소값 넘기기
+	// 받을 때 int로 받아지고만,
+	printf("\n*질문* 좋아하는 숫자 3개는? (띄어쓰기로 구분)\n");
+	scanf_s("%d %d %d", &one, &two, &three);
+	printf("다시 쓰기: %d, %d, %d", one, two, three);
+
+
+	printf("\n\n좋아하는 영단어는? ");
+	char word[256]; // word 자체가 주소값
+	scanf_s("\n%s", word, sizeof(word));
+	printf("\n다시 쓰기 : %s", word);
+
+	return 0;
+}
